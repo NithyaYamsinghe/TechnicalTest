@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="bd616983-0d90-4bed-b54a-2c94b8c19019" >
+		<http:listener-connection host="0.0.0.0" port="${https.port}" protocol="HTTPS">
+			<tls:context >
+				<tls:key-store type="jks" path="keystore.jks" keyPassword="mulesoft" password="mulesoft" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="d67e0b7d-5371-42d7-a813-fdbe66480c2d" basePath="/json" >
+		<http:request-connection host="ip-api.com">
+		</http:request-connection>
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="0e1c17a0-596d-436e-8b4c-b43cc4bfa4d4" file="app.properties" />
+	<configuration-properties doc:name="Configuration properties" doc:id="5a39ba65-9949-4535-a286-8d5b7f51a939" file="app.properties" />
+	<flow name="technicaltestFlow1" doc:id="8f7e0065-2e39-4784-bc2b-97f7ef3db36a" >
+		<http:listener doc:name="Listener" doc:id="36da1faa-ab74-49bc-81af-e23357b51440" config-ref="HTTP_Listener_config" path="/technicaltest"/>
+		<http:request method="POST" doc:name="Request" doc:id="77e39ec0-5e6a-4331-8ae3-3b91b628d459" config-ref="HTTP_Request_configuration" path="/#[attributes.headers['x-real-ip']]">
+		</http:request>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="3ea19964-8e11-4bc4-bb5b-4857db32bcb2" />
+	</flow>
+</mule>
